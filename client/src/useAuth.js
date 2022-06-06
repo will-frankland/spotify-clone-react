@@ -22,7 +22,17 @@ export default function useAuth(code) {
   }, [code])
 
   useEffect(() => {
-
+    axios.post('http://localhost:3001/refresh', {
+      refreshToken,
+    }).then(res => {
+      setAccessToken(res.data.access_token)
+      setRefreshToken(res.data.refresh_token)
+      setExpiresIn(res.data.expires_in)
+      window.history.pushState({}, null, "/")
+    })
+    .catch(() => {
+      window.location = '/'
+    })
   }, [refreshToken, expiresIn])
 
   return accessToken
